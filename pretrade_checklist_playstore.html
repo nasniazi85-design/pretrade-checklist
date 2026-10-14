@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pre-Trade Checklist</title>
+<meta name="theme-color" content="#0B0D0F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky:        #2F8FD1;
+  --sky-deep:   #0F5E92;
+  --sky-mid:    #5FA8D3;
+  --sky-pale:   #EAF4FC;
+  --sky-pale2:  #D3E9FA;
+  --black:      #0B0D0F;
+  --ink:        #15181B;
+  --gray:       #5F6870;
+  --line:       #DCE6EE;
+  --paper:      #FFFFFF;
+  --canvas:     #F6FAFD;
+  --win:        #1E9E6B;
+  --risk:       #C8860D;
+  --lose:       #D14D4D;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+:root:not([data-theme="light"]) { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --black: #05070A; --ink: #EAF0F5; --gray: #90A0AE; --line: #223040;
+    --paper: #0F151C; --canvas: #0A0F15; --sky-pale: #10283A; --sky-pale2: #123249;
+  }
+}
+:root[data-theme="dark"] {
+  --black: #05070A; --ink: #EAF0F5; --gray: #90A0AE; --line: #223040;
+  --paper: #0F151C; --canvas: #0A0F15; --sky-pale: #10283A; --sky-pale2: #123249;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--canvas); color: var(--ink);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-family: 'Fraunces', serif; font-variant-numeric: tabular-nums; }
+.wrap { max-width: 560px; margin: 0 auto; padding-bottom: 40px; }
+
+/* topbar */
+.topbar { background: var(--black); padding: 14px 18px calc(13px + env(safe-area-inset-top,0px)) 18px; padding-top: calc(14px + env(safe-area-inset-top,0px)); position: sticky; top: 0; z-index: 20; }
+.topbar-inner { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 8px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--sky); flex: none; box-shadow: 0 0 0 0 rgba(47,143,209,.6); animation: pulse 2.4s infinite; }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+@keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(47,143,209,.55);} 70%{box-shadow:0 0 0 7px rgba(47,143,209,0);} 100%{box-shadow:0 0 0 0 rgba(47,143,209,0);} }
+.topbar h1 { color: #fff; font-size: 13.5px; font-weight: 700; margin: 0; }
+.reset-btn {
+  margin-left: auto; font-family: inherit; font-size: 11px; font-weight: 600; color: #CFE2EF; background: transparent;
+  border: 1px solid #27384A; border-radius: 6px; padding: 5px 11px; cursor: pointer;
+}
+.reset-btn:hover { border-color: var(--sky-mid); }
+
+/* sticky score */
+.score-bar {
+  position: sticky; top: 46px; z-index: 19; background: var(--paper); border-bottom: 1px solid var(--line);
+  padding: 12px 18px; display: flex; align-items: center; gap: 14px;
+}
+.score-ring { position: relative; width: 52px; height: 52px; flex: none; }
+.score-ring svg { transform: rotate(-90deg); width: 52px; height: 52px; }
+.score-ring circle { fill: none; stroke-width: 6; }
+.score-ring .bg { stroke: var(--line); }
+.score-ring .fg { stroke: var(--sky); stroke-linecap: round; transition: stroke-dashoffset .35s ease, stroke .35s ease; }
+.score-ring .pct {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.score-info { flex: 1; min-width: 0; }
+.score-info .label { font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); }
+.score-info .verdict { font-size: 14px; font-weight: 700; margin-top: 1px; }
+
+/* hero */
+.hero { padding: 18px 18px 4px; text-align: center; }
+.hero h2 { margin: 0 0 4px; font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.hero p { margin: 0; color: var(--gray); font-size: 12px; line-height: 1.55; }
+
+/* section */
+.section-title {
+  font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--sky-deep); margin: 22px 18px 10px;
+}
+.items { padding: 0 18px; display: flex; flex-direction: column; gap: 8px; }
+.item {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+  padding: 13px 14px; cursor: pointer; transition: border-color .15s, background .15s;
+  user-select: none;
+}
+.item:hover { border-color: var(--sky-mid); }
+.item.checked { background: var(--sky-pale); border-color: var(--sky-pale2); }
+.item input { display: none; }
+.chk {
+  width: 21px; height: 21px; border-radius: 6px; border: 2px solid var(--line); flex: none; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center; transition: background .15s, border-color .15s;
+}
+.item.checked .chk { background: var(--sky); border-color: var(--sky); }
+.chk svg { width: 13px; height: 13px; opacity: 0; transition: opacity .1s; }
+.item.checked .chk svg { opacity: 1; }
+.item .txt { font-size: 12.5px; line-height: 1.45; color: var(--ink); }
+.item.checked .txt { color: var(--ink); }
+
+/* day status toggle */
+.daybox {
+  margin: 22px 18px 0; padding: 14px 16px; border-radius: 12px;
+  background: var(--paper); border: 1px solid var(--line); display: flex; align-items: center; gap: 12px;
+}
+.daybox .txt { flex: 1; font-size: 12px; line-height: 1.5; }
+.daybox .txt b { display: block; font-size: 12.5px; margin-bottom: 1px; }
+.switch { position: relative; width: 44px; height: 26px; flex: none; }
+.switch input { display: none; }
+.switch .track { position: absolute; inset: 0; background: var(--line); border-radius: 20px; transition: background .2s; cursor: pointer; }
+.switch .knob { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+.switch input:checked + .track { background: var(--win); }
+.switch input:checked + .track .knob { transform: translateX(18px); }
+
+/* verdict banner */
+.verdict-banner {
+  margin: 24px 18px 0; padding: 20px; border-radius: 14px; text-align: center;
+  transition: background .25s, border-color .25s;
+  border: 1px solid var(--line);
+}
+.verdict-banner .vb-icon { font-size: 26px; line-height: 1; margin-bottom: 6px; }
+.verdict-banner .vb-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; }
+.verdict-banner .vb-sub { font-size: 11.5px; color: var(--gray); margin-top: 4px; line-height: 1.5; max-width: 380px; margin-left: auto; margin-right: auto; }
+.verdict-banner.safe { background: #E4F5ED; border-color: #BFE6D4; }
+.verdict-banner.safe .vb-title { color: var(--win); }
+.verdict-banner.risky { background: #FBF0DA; border-color: #F0DBA8; }
+.verdict-banner.risky .vb-title { color: var(--risk); }
+.verdict-banner.no { background: #FBE6E6; border-color: #F2C2C2; }
+.verdict-banner.no .vb-title { color: var(--lose); }
+
+/* legend */
+.legend-table { margin: 20px 18px 0; display: flex; flex-direction: column; gap: 6px; }
+.legend-row { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--gray); padding: 6px 2px; }
+.legend-row .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+
+.foot {
+  margin-top: 26px; padding: 14px 18px calc(18px + env(safe-area-inset-bottom,0px));
+  border-top: 1px solid var(--line); color: var(--gray); font-size: 10.5px; text-align: center; line-height: 1.6;
+}
+
+/* ---------- splash ---------- */
+#splash {
+  position: fixed; inset: 0; z-index: 999; background: var(--black);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  transition: opacity .45s ease, visibility .45s ease;
+}
+#splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.splash-chart { display: flex; align-items: flex-end; gap: 9px; height: 74px; }
+.splash-chart .bar {
+  width: 15px; border-radius: 5px; transform-origin: bottom; transform: scaleY(0);
+  animation: growBar .55s cubic-bezier(.34,1.56,.64,1) forwards;
+  box-shadow: 0 0 16px -2px rgba(47,143,209,.5);
+}
+.splash-chart .b1 { height: 38px; background: var(--lose); animation-delay: .08s; }
+.splash-chart .b2 { height: 64px; background: var(--win);  animation-delay: .20s; }
+.splash-chart .b3 { height: 48px; background: var(--lose); animation-delay: .32s; }
+.splash-chart .b4 { height: 74px; background: var(--win);  animation-delay: .44s; }
+@keyframes growBar { to { transform: scaleY(1); } }
+.splash-title {
+  color: #fff; font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; text-align: center;
+  opacity: 0; transform: translateY(8px); letter-spacing: -0.01em;
+  animation: fadeUp .5s ease forwards; animation-delay: .62s;
+}
+.splash-sub {
+  color: var(--sky-mid); font-size: 10.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  opacity: 0; animation: fadeUp .5s ease forwards; animation-delay: .78s;
+}
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  #splash, .splash-chart .bar, .splash-title, .splash-sub { animation: none !important; opacity: 1; transform: none; }
+  #splash.hide { opacity: 0; }
+}
+
+/* ---------- pledge ---------- */
+.pledge {
+  margin: 22px 18px 0; padding: 18px 18px 16px; border-radius: 14px;
+  background: var(--paper); border: 1px solid var(--line);
+}
+.pledge .pledge-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--sky-deep); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+.pledge-en { margin: 0; font-size: 12.5px; line-height: 1.7; color: var(--ink); }
+
+/* ---------- quote box ---------- */
+.quote-box {
+  margin: 16px 18px 0; padding: 12px 16px; border-radius: 12px;
+  background: var(--sky-pale); border: 1px solid var(--sky-pale2); border-left: 3px solid var(--sky);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.quote-box .q-mark {
+  font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: var(--sky-mid);
+  line-height: .7; flex: none; margin-top: 2px;
+}
+.quote-box .q-text { font-size: 11.5px; line-height: 1.55; color: var(--sky-deep); font-style: italic; }
+
+/* ---------- risk ladder ---------- */
+.ladder-card { margin: 16px 18px 0; padding: 18px; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); }
+.ladder-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.ladder-title { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--sky-deep); }
+.cap-field { display: flex; align-items: center; gap: 7px; }
+.cap-field label { font-size: 10px; color: var(--gray); font-weight: 600; }
+.cap-input-wrap { display: flex; align-items: center; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; gap: 2px; }
+.cap-input-wrap span { font-size: 12px; color: var(--gray); font-weight: 600; }
+.cap-input-wrap input { border: none; background: transparent; width: 64px; font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; color: var(--ink); outline: none; }
+.ladder-levels { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+.lvl { border: 1px solid var(--line); border-radius: 10px; padding: 9px 4px; text-align: center; transition: border-color .15s, background .15s, transform .15s; }
+.lvl .lvl-num { font-size: 10px; font-weight: 700; color: var(--gray); letter-spacing: .04em; }
+.lvl .lvl-pct { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+.lvl.active { border-color: var(--sky); background: var(--sky-pale); transform: translateY(-2px); }
+.lvl.active .lvl-num, .lvl.active .lvl-pct { color: var(--sky-deep); }
+.lvl.passed { border-color: var(--sky-pale2); }
+.ladder-current { text-align: center; padding: 14px 10px; border-radius: 12px; background: var(--sky-pale); border: 1px solid var(--sky-pale2); margin-bottom: 14px; }
+.lc-label { font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sky-deep); opacity: .8; }
+.lc-amount { font-size: 30px; font-weight: 700; color: var(--sky-deep); margin-top: 2px; }
+.lc-sub { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.streak-bar { margin-bottom: 14px; }
+.streak-label { font-size: 11.5px; color: var(--gray); margin-bottom: 7px; text-align: center; }
+.streak-dots { display: flex; justify-content: center; gap: 6px; }
+.streak-dots .sd { width: 9px; height: 9px; border-radius: 50%; background: var(--line); transition: background .15s; }
+.streak-dots .sd.filled { background: var(--win); }
+.ladder-btns { display: flex; gap: 10px; margin-bottom: 10px; }
+.lbtn { flex: 1; padding: 13px; border: none; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer; transition: transform .1s, opacity .15s; color: #fff; }
+.lbtn:active { transform: scale(.97); }
+.lbtn.win { background: var(--win); }
+.lbtn.loss { background: var(--lose); }
+.ladder-reset { width: 100%; padding: 10px; border: 1px solid var(--line); background: transparent; border-radius: 9px; font-family: inherit; font-size: 11px; font-weight: 600; color: var(--gray); cursor: pointer; }
+.ladder-reset:hover { border-color: var(--sky-mid); color: var(--sky-deep); }
+
+/* ---------- signature ---------- */
+.sign-card { margin: 18px 18px 0; }
+.sign-paper {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+  padding: 28px 20px 18px; text-align: center; position: relative; overflow: hidden;
+}
+.sign-kicker { font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gray); margin-bottom: 14px; }
+.sign-name {
+  font-family: 'Mrs Saint Delafield', cursive; font-size: 46px; color: var(--sky-deep); line-height: 1;
+  display: inline-block; white-space: nowrap; clip-path: inset(0 100% 0 0);
+}
+.sign-name.revealed { clip-path: inset(0 0% 0 0); }
+.sign-name.animate { animation: signReveal 1.6s cubic-bezier(.65,.05,.36,1) forwards; }
+@keyframes signReveal { to { clip-path: inset(0 0% 0 0); } }
+.sign-line { height: 2px; background: var(--line); margin: 14px auto 10px; width: 72%; }
+.sign-date { font-size: 11px; color: var(--gray); }
+.sign-btn {
+  margin-top: 16px; width: 100%; padding: 14px; border: none; border-radius: 10px;
+  background: var(--sky-deep); color: #fff; font-family: inherit; font-weight: 700; font-size: 13px;
+  cursor: pointer; transition: transform .1s, background .15s;
+}
+.sign-btn:active { transform: scale(.98); }
+.sign-btn.signed { background: var(--win); }
+@media (prefers-reduced-motion: reduce) {
+  .sign-name.animate { animation: none !important; clip-path: inset(0 0% 0 0); }
+}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-chart">
+    <span class="bar b1"></span>
+    <span class="bar b2"></span>
+    <span class="bar b3"></span>
+    <span class="bar b4"></span>
+  </div>
+  <div class="splash-title">Pre-Trade Checklist</div>
+  <div class="splash-sub">Check it before you enter</div>
+</div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="dot"></span>
+    <h1>Pre-Trade Checklist</h1>
+    <button class="reset-btn" id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<div class="score-bar">
+  <div class="score-ring">
+    <svg viewBox="0 0 52 52">
+      <circle class="bg" cx="26" cy="26" r="22"></circle>
+      <circle class="fg" id="ring" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="138.2"></circle>
+    </svg>
+    <div class="pct num" id="pctLabel">0%</div>
+  </div>
+  <div class="score-info">
+    <div class="label" id="checkedCount">0 / 8 checked</div>
+    <div class="verdict" id="verdictShort">—</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h2>Check It Before You Enter</h2>
+    <p>Tick every box that's true right now. 60%+ is a safe entry, 40–60% is risky, under 40% means don't take the trade.</p>
+  </div>
+
+  <div class="quote-box">
+    <span class="q-mark">“</span>
+    <span class="q-text" id="quoteText">Discipline today builds the freedom you're trading for.</span>
+  </div>
+
+  <div class="ladder-card">
+    <div class="ladder-head">
+      <div class="ladder-title">◆ Risk Ladder</div>
+      <div class="cap-field">
+        <label for="capitalInput">Capital</label>
+        <div class="cap-input-wrap">
+          <span>$</span>
+          <input type="number" id="capitalInput" min="1" step="1" value="300" inputmode="decimal">
+        </div>
+      </div>
+    </div>
+
+    <div class="ladder-levels" id="ladderLevels">
+      <div class="lvl" data-level="1"><div class="lvl-num">L1</div><div class="lvl-pct">2%</div></div>
+      <div class="lvl" data-level="2"><div class="lvl-num">L2</div><div class="lvl-pct">3%</div></div>
+      <div class="lvl" data-level="3"><div class="lvl-num">L3</div><div class="lvl-pct">4%</div></div>
+      <div class="lvl" data-level="4"><div class="lvl-num">L4</div><div class="lvl-pct">10%</div></div>
+    </div>
+
+    <div class="ladder-current">
+      <div class="lc-label">Current risk</div>
+      <div class="lc-amount num" id="riskAmount">$6.00</div>
+      <div class="lc-sub" id="riskSub">Level 1 · 2% of $300</div>
+    </div>
+
+    <div class="streak-bar">
+      <div class="streak-label" id="streakLabel">Win streak: 0 / 2 to level up</div>
+      <div class="streak-dots" id="streakDots"></div>
+    </div>
+
+    <div class="ladder-btns">
+      <button class="lbtn win" id="winBtn">✅ Win</button>
+      <button class="lbtn loss" id="lossBtn">❌ Loss</button>
+    </div>
+    <button class="ladder-reset" id="ladderResetBtn">Reset to Level 1</button>
+  </div>
+
+  <div class="section-title">Strategy</div>
+  <div class="items" id="strategyItems">
+    <label class="item" data-group="strategy">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">Aligned with the market trend — or, if against it, I have a strong, confirmed reason for a reversal.</span>
+    </label>
+    <label class="item" data-group="strategy">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">Price has reacted at the Volume Profile midline + Fibonacci level, and an FVG is present.</span>
+    </label>
+    <label class="item" data-group="strategy">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">An Order Block has been tagged / reacted to.</span>
+    </label>
+    <label class="item" data-group="strategy">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">The Area of Interest has been checked properly — no mistake in marking it.</span>
+    </label>
+  </div>
+
+  <div class="section-title">Psychology</div>
+  <div class="items" id="psychItems">
+    <label class="item" data-group="psych">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">The market feels clear to me right now — I'm not just forcing a trade.</span>
+    </label>
+    <label class="item" data-group="psych">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">I genuinely believe this is the best possible entry point.</span>
+    </label>
+    <label class="item" data-group="psych">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">I know exactly where my entry and exit will be, right this moment.</span>
+    </label>
+    <label class="item" data-group="psych">
+      <input type="checkbox">
+      <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+      <span class="txt">I fully accept the risk of losing this money if the trade goes wrong.</span>
+    </label>
+  </div>
+
+  <div class="daybox">
+    <label class="switch">
+      <input type="checkbox" id="dayPositive">
+      <span class="track"><span class="knob"></span></span>
+    </label>
+    <div class="txt">
+      <b>Today's P&amp;L is already positive</b>
+      Only switch this on if you've already closed at least one trade today and you're net profitable so far.
+    </div>
+  </div>
+
+  <div class="verdict-banner no" id="verdictBanner">
+    <div class="vb-icon" id="vbIcon">⛔</div>
+    <div class="vb-title" id="vbTitle">Do Not Enter</div>
+    <div class="vb-sub" id="vbSub">Score is below 40%. The setup isn't confirmed enough — wait for a better one.</div>
+  </div>
+
+  <div class="legend-table">
+    <div class="legend-row"><span class="sw" style="background:var(--win)"></span>60% and above — safe entry</div>
+    <div class="legend-row"><span class="sw" style="background:var(--risk)"></span>40–59% — risky; only allowed if today is already a positive day</div>
+    <div class="legend-row"><span class="sw" style="background:var(--lose)"></span>Below 40% — do not enter, no exceptions</div>
+  </div>
+
+  <div class="pledge">
+    <div class="pledge-label">◆ Daily Commitment</div>
+    <p class="pledge-en">I pledge to myself that as long as my heart beats, I will not stop working to improve my financial situation and my health. Today, I will not trade for money, for bigger targets, for chasing a win rate, or for the thrill of it — my goal is to execute my own trading system, and I credit the result to proper execution, patience, time, and control of my own psychology and my process. While trading, I will not wrestle with my own rules, and for any early trade whose checklist falls below 60%, I will not take it. My measure of success is not the number or size of my trades — my measure of success is the execution of my own trading process.</p>
+  </div>
+
+  <div class="sign-card">
+    <div class="sign-paper">
+      <div class="sign-kicker">Sign below to commit for today</div>
+      <span class="sign-name" id="signName">Nasib&nbsp;Niazi</span>
+      <div class="sign-line"></div>
+      <div class="sign-date" id="signDate">Not signed yet today</div>
+    </div>
+    <button class="sign-btn" id="signBtn">Sign Today's Commitment</button>
+  </div>
+
+  <div class="foot">Pre-Trade Checklist — re-check this before every single entry. Nothing here is saved or sent anywhere; it all runs on this page.</div>
+
+</div>
+
+<script>
+(function(){
+  const boxes = Array.from(document.querySelectorAll('.item input[type="checkbox"]'));
+  const dayPositive = document.getElementById('dayPositive');
+  const ring = document.getElementById('ring');
+  const pctLabel = document.getElementById('pctLabel');
+  const checkedCount = document.getElementById('checkedCount');
+  const verdictShort = document.getElementById('verdictShort');
+  const banner = document.getElementById('verdictBanner');
+  const vbIcon = document.getElementById('vbIcon');
+  const vbTitle = document.getElementById('vbTitle');
+  const vbSub = document.getElementById('vbSub');
+  const resetBtn = document.getElementById('resetBtn');
+  const CIRC = 138.2;
+  const STORE_KEY = 'pretrade-checklist-v1';
+
+  function colorFor(pct){
+    if (pct >= 60) return getComputedStyle(document.documentElement).getPropertyValue('--win').trim();
+    if (pct >= 40) return getComputedStyle(document.documentElement).getPropertyValue('--risk').trim();
+    return getComputedStyle(document.documentElement).getPropertyValue('--lose').trim();
+  }
+
+  function render(){
+    const total = boxes.length;
+    const checked = boxes.filter(b => b.checked).length;
+    const pct = Math.round((checked/total)*100);
+
+    boxes.forEach(b => {
+      const item = b.closest('.item');
+      item.classList.toggle('checked', b.checked);
+    });
+
+    const offset = CIRC - (CIRC * pct/100);
+    ring.style.strokeDashoffset = offset;
+    const c = colorFor(pct);
+    ring.style.stroke = c;
+    pctLabel.textContent = pct + '%';
+    checkedCount.textContent = checked + ' / ' + total + ' checked';
+
+    banner.classList.remove('safe','risky','no');
+
+    if (pct >= 60) {
+      banner.classList.add('safe');
+      vbIcon.textContent = '✅';
+      vbTitle.textContent = 'Safe to Enter';
+      vbSub.textContent = 'Score is ' + pct + '% — your checklist confirms the setup. Follow your plan: RR, stop loss and target are already fixed.';
+      verdictShort.textContent = 'Safe to enter';
+      verdictShort.style.color = c;
+    } else if (pct >= 40) {
+      banner.classList.add('risky');
+      if (dayPositive.checked) {
+        vbIcon.textContent = '⚠️';
+        vbTitle.textContent = 'Risky — Allowed (positive day)';
+        vbSub.textContent = 'Score is ' + pct + '%. Normally this is too weak, but since today is already net positive, a smaller, cautious entry is allowed.';
+      } else {
+        vbIcon.textContent = '⚠️';
+        vbTitle.textContent = 'Risky — Wait';
+        vbSub.textContent = 'Score is ' + pct + '%. This only becomes allowed if today\'s P&L is already positive. Otherwise, skip this one.';
+      }
+      verdictShort.textContent = dayPositive.checked ? 'Risky — allowed' : 'Risky — wait';
+      verdictShort.style.color = c;
+    } else {
+      banner.classList.add('no');
+      vbIcon.textContent = '⛔';
+      vbTitle.textContent = 'Do Not Enter';
+      vbSub.textContent = 'Score is ' + pct + '%, below the 40% floor. No exception applies here — skip this setup.';
+      verdictShort.textContent = 'Do not enter';
+      verdictShort.style.color = c;
+    }
+
+    save();
+  }
+
+  function save(){
+    try {
+      const state = { boxes: boxes.map(b => b.checked), day: dayPositive.checked };
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function load(){
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      if (state && Array.isArray(state.boxes)) {
+        state.boxes.forEach((v,i) => { if (boxes[i]) boxes[i].checked = !!v; });
+      }
+      if (state && typeof state.day === 'boolean') dayPositive.checked = state.day;
+    } catch (e) {}
+  }
+
+  boxes.forEach(b => b.addEventListener('change', render));
+  dayPositive.addEventListener('change', render);
+  resetBtn.addEventListener('click', function(){
+    boxes.forEach(b => b.checked = false);
+    dayPositive.checked = false;
+    render();
+  });
+
+  load();
+  render();
+
+  var QUOTES = [
+    "Discipline today builds the freedom you're trading for.",
+    "One more day of following the plan is one more step forward.",
+    "Consistency beats intensity. Show up, follow the process.",
+    "Small disciplined decisions compound into big results.",
+    "You don't need a big win today — you need a good decision.",
+    "Protect your capital first; the profits will follow.",
+    "Every checklist you complete is a vote for the trader you want to become.",
+    "Patience is a position too.",
+    "Your only job today is to execute your system.",
+    "The market will still be here tomorrow. Trade only when it's right.",
+    "Progress is a process, not a single trade.",
+    "Keep showing up. That's how this gets built."
+  ];
+  var pickedQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  var splashSub = document.querySelector('.splash-sub');
+  if (splashSub) { splashSub.textContent = pickedQuote; }
+  var quoteText = document.getElementById('quoteText');
+  if (quoteText) { quoteText.textContent = pickedQuote; }
+
+  var splash = document.getElementById('splash');
+  if (splash) {
+    function hideSplash(){ splash.classList.add('hide'); }
+    setTimeout(hideSplash, 1500);
+    splash.addEventListener('click', hideSplash);
+  }
+
+  (function signature(){
+    var signBtn = document.getElementById('signBtn');
+    var signName = document.getElementById('signName');
+    var signDate = document.getElementById('signDate');
+    if (!signBtn || !signName || !signDate) return;
+    var SIGN_KEY = 'pretrade-sign-date-v1';
+
+    function todayStr(){
+      var d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    }
+    function niceDate(){
+      return new Date().toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+    }
+    function refresh(){
+      var last = null;
+      try { last = localStorage.getItem(SIGN_KEY); } catch(e) {}
+      if (last === todayStr()) {
+        signName.classList.remove('animate');
+        signName.classList.add('revealed');
+        signDate.textContent = 'Signed today · ' + niceDate();
+        signBtn.textContent = 'Sign Again';
+        signBtn.classList.add('signed');
+      } else {
+        signName.classList.remove('revealed','animate');
+        signDate.textContent = 'Not signed yet today';
+        signBtn.textContent = "Sign Today's Commitment";
+        signBtn.classList.remove('signed');
+      }
+    }
+
+    signBtn.addEventListener('click', function(){
+      signName.classList.remove('revealed','animate');
+      void signName.offsetWidth;
+      signName.classList.add('animate');
+      try { localStorage.setItem(SIGN_KEY, todayStr()); } catch(e) {}
+      signDate.textContent = 'Signed today · ' + niceDate();
+      signBtn.textContent = 'Sign Again';
+      signBtn.classList.add('signed');
+    });
+
+    refresh();
+  })();
+
+  (function riskLadder(){
+    var LEVELS = [
+      { pct: 2,  needWins: 2 },
+      { pct: 3,  needWins: 2 },
+      { pct: 4,  needWins: 3 },
+      { pct: 10, needWins: 2 }
+    ];
+    var LADDER_KEY = 'pretrade-risk-ladder-v1';
+    var capitalInput = document.getElementById('capitalInput');
+    var levelEls = Array.from(document.querySelectorAll('.lvl'));
+    var riskAmount = document.getElementById('riskAmount');
+    var riskSub = document.getElementById('riskSub');
+    var streakLabel = document.getElementById('streakLabel');
+    var streakDots = document.getElementById('streakDots');
+    var winBtn = document.getElementById('winBtn');
+    var lossBtn = document.getElementById('lossBtn');
+    var ladderResetBtn = document.getElementById('ladderResetBtn');
+    if (!capitalInput || !winBtn) return;
+
+    var state = { capital: 300, level: 1, streak: 0 };
+
+    function loadLadder(){
+      try {
+        var raw = localStorage.getItem(LADDER_KEY);
+        if (!raw) return;
+        var s = JSON.parse(raw);
+        if (s && typeof s.capital === 'number' && s.capital > 0) state.capital = s.capital;
+        if (s && [1,2,3,4].indexOf(s.level) !== -1) state.level = s.level;
+        if (s && typeof s.streak === 'number' && s.streak >= 0) state.streak = s.streak;
+      } catch(e) {}
+    }
+    function saveLadder(){
+      try { localStorage.setItem(LADDER_KEY, JSON.stringify(state)); } catch(e) {}
+    }
+
+    function renderLadder(){
+      capitalInput.value = state.capital;
+      var idx = state.level - 1;
+      var pct = LEVELS[idx].pct;
+      var amount = state.capital * pct / 100;
+
+      levelEls.forEach(function(el){
+        var lvl = parseInt(el.getAttribute('data-level'), 10);
+        el.classList.toggle('active', lvl === state.level);
+        el.classList.toggle('passed', lvl < state.level);
+      });
+
+      riskAmount.textContent = '$' + amount.toFixed(2);
+      riskSub.textContent = 'Level ' + state.level + ' · ' + pct + '% of $' + state.capital;
+
+      var needed = LEVELS[idx].needWins;
+      var isCap = state.level === 4;
+      streakLabel.textContent = isCap
+        ? ('Win streak: ' + state.streak + ' / ' + needed + ' to lock in profit (steps back to L3)')
+        : ('Win streak: ' + state.streak + ' / ' + needed + ' to level up');
+
+      streakDots.innerHTML = '';
+      for (var i = 0; i < needed; i++) {
+        var dot = document.createElement('span');
+        dot.className = 'sd' + (i < state.streak ? ' filled' : '');
+        streakDots.appendChild(dot);
+      }
+
+      saveLadder();
+    }
+
+    winBtn.addEventListener('click', function(){
+      state.streak++;
+      var idx = state.level - 1;
+      var needed = LEVELS[idx].needWins;
+      if (state.level === 4) {
+        if (state.streak >= needed) { state.level = 3; state.streak = 0; }
+      } else if (state.streak >= needed) {
+        state.level++; state.streak = 0;
+      }
+      renderLadder();
+    });
+
+    lossBtn.addEventListener('click', function(){
+      state.level = Math.max(1, state.level - 1);
+      state.streak = 0;
+      renderLadder();
+    });
+
+    capitalInput.addEventListener('input', function(){
+      var v = parseFloat(capitalInput.value);
+      if (!isNaN(v) && v > 0) { state.capital = v; renderLadder(); }
+    });
+    capitalInput.addEventListener('blur', function(){
+      var v = parseFloat(capitalInput.value);
+      if (!capitalInput.value || isNaN(v) || v <= 0) { state.capital = 300; renderLadder(); }
+    });
+
+    ladderResetBtn.addEventListener('click', function(){
+      state.level = 1; state.streak = 0;
+      renderLadder();
+    });
+
+    loadLadder();
+    renderLadder();
+  })();
+})();
+</script>
+
+</body>
+</html>
